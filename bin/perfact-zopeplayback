@@ -9,28 +9,30 @@ import argparse
 import perfact.zodbsync
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Upload objects to the Data.fs')
+    parser = argparse.ArgumentParser(
+        description='Upload objects to the Data.fs'
+    )
     default_configfile = '/etc/perfact/modsync/zodb.py'
-    parser.add_argument('--config', '-c', type=str,
-                        help='Path to config (default: %s)'
-                        % default_configfile,
+    parser.add_argument('--config', '-c',
+                        type=str,
+                        help=('Path to config (default: %s)' %
+                              default_configfile),
                         default=default_configfile)
-    parser.add_argument(
-        '--override', '-o', action='store_true',
-        help='Override object type changes when uploading',
-        default=False)
-    parser.add_argument(
-            '--no-recurse', action='store_true',
-            help="Only upload metadata, do not remove elements or recurse",
-            default=False)
-    parser.add_argument(
-            '--skip-errors', action='store_true',
-            help="Skip failed objects and continue",
-            default=False)
-    parser.add_argument(
-        'path', nargs='+', type=str,
-        help='Sub-Path in Data.fs to be recorded',
-        )
+    parser.add_argument('--override', '-o',
+                        action='store_true',
+                        help='Override object type changes when uploading',
+                        default=False)
+    parser.add_argument('--no-recurse', action='store_true',
+                        help="Only upload metadata, "
+                        "do not remove elements or recurse",
+                        default=False)
+    parser.add_argument('--skip-errors',
+                        action='store_true',
+                        help="Skip failed objects and continue",
+                        default=False)
+    parser.add_argument('path',
+                        nargs='+', type=str,
+                        help='Sub-Path in Data.fs to be recorded')
     args = parser.parse_args()
     paths = args.path
     override = args.override
@@ -46,8 +48,11 @@ if __name__ == '__main__':
 
     try:
         for path in paths:
-            sync.playback(path=path, override=override, recurse=recurse, skip_errors=args.skip_errors)
-    except:
+            sync.playback(path=path,
+                          override=override,
+                          recurse=recurse,
+                          skip_errors=args.skip_errors)
+    except Exception:
         print('Error with path ' + path)
         txn_mgr.abort()
         raise
